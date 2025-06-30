@@ -11,7 +11,8 @@ const startAlignment = Alignment.topLeft;
 const endAlignment = Alignment.bottomRight;
 
 class GradientContainer extends StatelessWidget {
-  const GradientContainer({super.key});
+  final List<Color>? colors;
+  const GradientContainer({super.key, required this.colors});
 
   @override
   Widget build(BuildContext context) {
@@ -20,18 +21,19 @@ class GradientContainer extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [
-            Color.fromARGB(255, 40, 63, 0),
-            Color.fromARGB(255, 0, 255, 225),
-          ],
+          colors: colors ?? [Colors.blue, Colors.purple],
           // begin: startAlignment ?? Alignment.topLeft,
           begin: startAlignment,
           end: endAlignment,
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: const Center(
-        child: CenterMiddleText(),
+      child: Center(
+        child: CenterMiddleText(   
+          text: 'Khaled Allam \n'
+          '${DateTime.now().toString().split('.').first}\n'
+          'خالد علام',
+        ),
       ),
     );
   }

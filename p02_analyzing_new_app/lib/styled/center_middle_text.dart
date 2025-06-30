@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CenterMiddleText extends StatelessWidget {
-  const CenterMiddleText({super.key});
-
+  final String text;
+  const CenterMiddleText({super.key, required this.text});
+  
   @override
   Widget build(BuildContext context) {
     return Text(
-      ('Khaled Allam \n'
-          'خالد علام'),
+      text,
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
