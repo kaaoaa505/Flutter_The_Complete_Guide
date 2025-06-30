@@ -28,12 +28,18 @@ class GradientContainer extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(
-        child: CenterMiddleText(   
-          text: 'Khaled Allam \n'
-          '${DateTime.now().toString().split('.').first}\n'
-          'خالد علام',
-        ),
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          Image.asset('assets/images/dice-4.png', fit: BoxFit.contain),
+          Center(
+            child: CenterMiddleText(   
+              text: 'Khaled Allam \n'
+              '${DateTime.now().toString().split('.').first}\n'
+              'خالد علام',
+            ),
+          ),
+        ],
       ),
     );
   }
