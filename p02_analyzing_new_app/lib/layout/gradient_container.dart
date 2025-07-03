@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:p02_analyzing_new_app/styled/center_middle_text.dart';
+import 'package:p02_analyzing_new_app/styled/dice_roller.dart';
 
 // var startAlignment = Alignment.topLeft;
 // Alignment? startAlignment;
@@ -28,19 +28,7 @@ class GradientContainer extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          Image.asset('assets/images/dice-4.png', fit: BoxFit.contain),
-          Center(
-            child: CenterMiddleText(   
-              text: 'Khaled Allam \n'
-              '${DateTime.now().toString().split('.').first}\n'
-              'خالد علام',
-            ),
-          ),
-        ],
-      ),
+      child: Center(child: DiceRoller()),
     );
   }
 }
