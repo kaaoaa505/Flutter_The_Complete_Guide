@@ -1,6 +1,10 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 import 'center_middle_text.dart';
+
+final Random random = Random();
 
 class DiceRoller extends StatefulWidget {
   const DiceRoller({super.key});
@@ -14,10 +18,7 @@ class _DiceRollerState extends State<DiceRoller> {
 
   void rollTheDice() {
     setState(() {
-      activeDice++;
-      activeDice = activeDice == 0 || activeDice == 7
-          ? 1
-          : activeDice = activeDice;
+      activeDice = random.nextInt(6) + 1; // Generates a number between 1 and 6
     });
   }
 
