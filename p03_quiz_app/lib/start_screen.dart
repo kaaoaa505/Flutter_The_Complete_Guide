@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
 
 class StartScreen extends StatelessWidget {
@@ -15,13 +17,14 @@ class StartScreen extends StatelessWidget {
           ),
           Image.asset('assets/images/quiz.png', width: 100),
           SizedBox(height: 30),
-          OutlinedButton(
+          OutlinedButton.icon(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,
               backgroundColor: Colors.redAccent,
             ),
-            child: Text('Start'),
+            label: Text('Start'),
+            icon: Icon(Icons.arrow_forward),
           ),
         ],
       ),
