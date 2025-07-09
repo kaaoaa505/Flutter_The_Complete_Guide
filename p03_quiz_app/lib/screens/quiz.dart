@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:p03_quiz_app/screens/quiz/questions.dart';
 
-import 'start_screen.dart';
+import 'start.dart';
 
 class Quiz extends StatefulWidget {
   const Quiz({super.key});
@@ -10,6 +11,21 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
+  Widget? activeScreen;
+
+  @override
+  void initState() {
+    super.initState();
+
+    activeScreen = Start(questionsScreenActivate);
+  }
+
+  void questionsScreenActivate() {
+    setState(() {
+      activeScreen = Questions();
+    });
+  }
+
   List<Color> colors = [
     const Color.fromARGB(255, 60, 39, 95),
     const Color.fromARGB(255, 27, 60, 65),
@@ -27,7 +43,7 @@ class _QuizState extends State<Quiz> {
               end: Alignment.bottomRight,
             ),
           ),
-          child: StartScreen(),
+          child: activeScreen,
         ),
       ),
     );
