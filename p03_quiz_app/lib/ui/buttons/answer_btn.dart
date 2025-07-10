@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class AnswerBtn extends StatelessWidget {
-  AnswerBtn(this.txt, this.fun, {super.key});
-  String txt;
+  AnswerBtn({super.key, required this.txt, required this.fun});
   
+  String txt;
   void Function() fun;
 
   @override
