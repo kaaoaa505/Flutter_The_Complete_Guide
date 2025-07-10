@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:p03_quiz_app/ui/buttons/answer_btn.dart';
 
 // ignore: must_be_immutable
 class Questions extends StatefulWidget {
@@ -34,10 +35,10 @@ class _QuestionsState extends State<Questions> {
             style: const TextStyle(color: Colors.greenAccent),
           ),
           const SizedBox(height: 30),
-          ElevatedButton(onPressed: () {}, child: Text('Answer 1.')),
-          ElevatedButton(onPressed: () {}, child: Text('Answer 2.')),
-          ElevatedButton(onPressed: () {}, child: Text('Answer 3.')),
-          ElevatedButton(onPressed: () {}, child: Text('Answer 4.')),
+          AnswerBtn('Answer 1.'),
+          AnswerBtn('Answer 2.'),
+          AnswerBtn('Answer 3.'),
+          AnswerBtn('Answer 4.'),
         ],
       ),
     );
