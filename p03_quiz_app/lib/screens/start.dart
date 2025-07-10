@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class Start extends StatelessWidget {
-  Start(this.questionsScreenActivate, {super.key});
+  Start(this.changeScreen, this.targetScreen, {super.key});
 
-  void Function() questionsScreenActivate;
+  final void Function(String) changeScreen;
+  final String targetScreen;
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class Start extends StatelessWidget {
           SizedBox(height: 30),
           OutlinedButton.icon(
             onPressed: () {
-              questionsScreenActivate();
+              changeScreen('questions');
             },
             style: OutlinedButton.styleFrom(
               foregroundColor: Colors.white,

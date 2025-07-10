@@ -11,15 +11,27 @@ class Quiz extends StatefulWidget {
 }
 
 class _QuizState extends State<Quiz> {
-  var activeScreen = 'start';
+  Widget? activeScreen;
+  String targetScreen = 'start';
 
-  void questionsScreenActivate() {
+  @override
+  void initState() {
+    super.initState();
+    activeScreen = Start(changeScreen, targetScreen);
+  }
+
+  void changeScreen(String screenName) {
     setState(() {
-      activeScreen = 'questions';
+      targetScreen = screenName;
+      if (targetScreen == 'start') {
+        activeScreen = Start(changeScreen, targetScreen);
+      } else if (targetScreen == 'questions') {
+        activeScreen = Questions(changeScreen, targetScreen);
+      }
     });
   }
 
-  List<Color> colors = [
+  final List<Color> colors = [
     const Color.fromARGB(255, 60, 39, 95),
     const Color.fromARGB(255, 27, 60, 65),
   ];
@@ -36,7 +48,7 @@ class _QuizState extends State<Quiz> {
               end: Alignment.bottomRight,
             ),
           ),
-          child: activeScreen == 'start' ? Start(questionsScreenActivate) : Questions(),
+          child: activeScreen,
         ),
       ),
     );
