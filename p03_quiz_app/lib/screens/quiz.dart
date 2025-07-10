@@ -12,21 +12,19 @@ class Quiz extends StatefulWidget {
 
 class _QuizState extends State<Quiz> {
   Widget? activeScreen;
-  String targetScreen = 'start';
 
   @override
   void initState() {
     super.initState();
-    activeScreen = Start(changeScreen, targetScreen);
+    activeScreen = Start(changeScreen);
   }
 
   void changeScreen(String screenName) {
     setState(() {
-      targetScreen = screenName;
-      if (targetScreen == 'start') {
-        activeScreen = Start(changeScreen, targetScreen);
-      } else if (targetScreen == 'questions') {
-        activeScreen = Questions(changeScreen, targetScreen);
+      if (screenName == 'start') {
+        activeScreen = Start(changeScreen);
+      } else if (screenName == 'questions') {
+        activeScreen = Questions(changeScreen);
       }
     });
   }

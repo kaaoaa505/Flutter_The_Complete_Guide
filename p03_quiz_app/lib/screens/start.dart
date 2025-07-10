@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class Start extends StatelessWidget {
-  Start(this.changeScreen, this.targetScreen, {super.key});
+  Start(this.changeScreen, {super.key});
 
   final void Function(String) changeScreen;
-  final String targetScreen;
 
   @override
   Widget build(BuildContext context) {
