@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AnswerBtn extends StatelessWidget {
   AnswerBtn({super.key, required this.txt, required this.fun});
-  
+
   String txt;
   void Function() fun;
 
@@ -11,14 +11,14 @@ class AnswerBtn extends StatelessWidget {
     return ElevatedButton(
       onPressed: fun,
       style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.lightGreenAccent,
-        backgroundColor: Colors.blueAccent,
+        foregroundColor: const Color.fromARGB(255, 137, 198, 231),
+        backgroundColor: const Color.fromARGB(255, 15, 39, 81),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadiusGeometry.circular(5)
+          borderRadius: BorderRadiusGeometry.circular(5),
         ),
-        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40)
+        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 40),
       ),
-      child: Text(txt),
+      child: Text(txt, textAlign: TextAlign.center),
     );
   }
 }
