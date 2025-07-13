@@ -18,30 +18,34 @@ class _QuestionsState extends State<Questions> {
     final currentQuestion = questions[0];
 
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton.icon(
-            onPressed: () {
-              widget.changeScreen('start');
-            },
-            style: OutlinedButton.styleFrom(
-              foregroundColor: Colors.white,
-              backgroundColor: const Color.fromARGB(50, 255, 255, 255),
+      child: Container(
+        margin: EdgeInsets.all(10),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            ElevatedButton.icon(
+              onPressed: () {
+                widget.changeScreen('start');
+              },
+              style: OutlinedButton.styleFrom(
+                foregroundColor: Colors.white,
+                backgroundColor: const Color.fromARGB(50, 255, 255, 255),
+              ),
+              label: const Text('Back Home.'),
+              icon: const Icon(Icons.arrow_back),
             ),
-            label: const Text('Back Home.'),
-            icon: const Icon(Icons.arrow_back),
-          ),
-          const SizedBox(height: 30),
-          Text(
-            currentQuestion.text,
-            style: const TextStyle(color: Colors.greenAccent),
-          ),
-          const SizedBox(height: 30),
-          ...currentQuestion.answers.map((answer) {
-            return AnswerBtn(txt: answer, fun: () {});
-          }),
-        ],
+            const SizedBox(height: 30),
+            Text(
+              currentQuestion.text,
+              style: const TextStyle(color: Colors.greenAccent),
+            ),
+            const SizedBox(height: 30),
+            ...currentQuestion.getShuffledAnswers().map((answer) {
+              return AnswerBtn(txt: answer, fun: () {});
+            }),
+          ],
+        ),
       ),
     );
   }
