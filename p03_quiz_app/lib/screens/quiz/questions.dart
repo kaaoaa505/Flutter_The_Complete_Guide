@@ -13,9 +13,17 @@ class Questions extends StatefulWidget {
 }
 
 class _QuestionsState extends State<Questions> {
+  var currentQuestionIndex = 0;
+
+  void nextQuestion() {
+    setState(() {
+      currentQuestionIndex++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final currentQuestion = questions[0];
+    final currentQuestion = questions[currentQuestionIndex];
 
     return Center(
       child: Container(
@@ -42,7 +50,12 @@ class _QuestionsState extends State<Questions> {
             ),
             const SizedBox(height: 30),
             ...currentQuestion.getShuffledAnswers().map((answer) {
-              return AnswerBtn(txt: answer, fun: () {});
+              return AnswerBtn(
+                txt: answer,
+                fun: () {
+                  nextQuestion();
+                },
+              );
             }),
           ],
         ),
