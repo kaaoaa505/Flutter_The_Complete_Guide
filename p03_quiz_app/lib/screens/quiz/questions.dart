@@ -6,8 +6,13 @@ import 'package:p03_quiz_app/ui/buttons/answer_btn.dart';
 // ignore: must_be_immutable
 class Questions extends StatefulWidget {
   final void Function(String) changeScreen;
+  final void Function(String) addAnswer;
 
-  const Questions(this.changeScreen, {super.key});
+  const Questions({
+    super.key,
+    required this.changeScreen,
+    required this.addAnswer,
+  });
 
   @override
   State<Questions> createState() => _QuestionsState();
@@ -16,7 +21,9 @@ class Questions extends StatefulWidget {
 class _QuestionsState extends State<Questions> {
   var currentQuestionIndex = 0;
 
-  void nextQuestion() {
+  void saveAnswer(String answer) {
+    widget.addAnswer(answer);
+
     setState(() {
       currentQuestionIndex++;
     });
@@ -47,14 +54,17 @@ class _QuestionsState extends State<Questions> {
             const SizedBox(height: 30),
             Text(
               currentQuestion.text,
-              style: GoogleFonts.amiri(color: const Color.fromARGB(255, 174, 147, 243), fontSize: 24),
+              style: GoogleFonts.amiri(
+                color: const Color.fromARGB(255, 174, 147, 243),
+                fontSize: 24,
+              ),
             ),
             const SizedBox(height: 30),
             ...currentQuestion.getShuffledAnswers().map((answer) {
               return AnswerBtn(
                 txt: answer,
                 fun: () {
-                  nextQuestion();
+                  saveAnswer(answer);
                 },
               );
             }),
