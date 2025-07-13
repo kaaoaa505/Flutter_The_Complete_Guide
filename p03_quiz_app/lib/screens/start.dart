@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class Start extends StatelessWidget {
-  Start(this.changeScreen, {super.key});
+  const Start(this.changeScreen, {super.key});
 
   final void Function(String) changeScreen;
 

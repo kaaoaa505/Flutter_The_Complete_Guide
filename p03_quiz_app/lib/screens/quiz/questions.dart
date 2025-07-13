@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:p03_quiz_app/data/questions_object.dart';
 import 'package:p03_quiz_app/ui/buttons/answer_btn.dart';
 
 // ignore: must_be_immutable
@@ -14,6 +15,8 @@ class Questions extends StatefulWidget {
 class _QuestionsState extends State<Questions> {
   @override
   Widget build(BuildContext context) {
+    final currentQuestion = questions[0];
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -31,14 +34,13 @@ class _QuestionsState extends State<Questions> {
           ),
           const SizedBox(height: 30),
           Text(
-            'Questions Screen:',
+            currentQuestion.text,
             style: const TextStyle(color: Colors.greenAccent),
           ),
           const SizedBox(height: 30),
-          AnswerBtn(txt: 'Answer 1.', fun: () {}),
-          AnswerBtn(txt: 'Answer 2.', fun: () {}),
-          AnswerBtn(txt: 'Answer 3.', fun: () {}),
-          AnswerBtn(txt: 'Answer 4.', fun: () {}),
+          ...currentQuestion.answers.map((answer) {
+            return AnswerBtn(txt: answer, fun: () {});
+          }),
         ],
       ),
     );
