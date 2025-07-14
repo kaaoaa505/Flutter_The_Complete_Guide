@@ -20,6 +20,7 @@ class _QuizState extends State<Quiz> {
   void initState() {
     super.initState();
     activeScreen = Start(changeScreen);
+    selectedAnswers = [];
   }
 
   void changeScreen(String screenName) {
@@ -38,10 +39,17 @@ class _QuizState extends State<Quiz> {
   void addAnswer(String answer) {
     selectedAnswers.add(answer);
 
+    if (selectedAnswers.length == 7) {
+      selectedAnswers = [];
+    }
+
     if (selectedAnswers.length == questions.length) {
       setState(() {
-        activeScreen = Result(changeScreen);
-        selectedAnswers = [];
+        activeScreen = Result(
+          changeScreen: changeScreen,
+          answers: [...selectedAnswers],
+        );
+        // selectedAnswers = [];
       });
     }
   }

@@ -24,6 +24,10 @@ class _QuestionsState extends State<Questions> {
   void saveAnswer(String answer) {
     widget.addAnswer(answer);
 
+    if (currentQuestionIndex == 6) {
+      currentQuestionIndex = 0;
+    }
+
     setState(() {
       currentQuestionIndex++;
     });
@@ -31,6 +35,11 @@ class _QuestionsState extends State<Questions> {
 
   @override
   Widget build(BuildContext context) {
+
+    if (currentQuestionIndex == 6) {
+      currentQuestionIndex = 0;
+    }
+    
     final currentQuestion = questions[currentQuestionIndex];
 
     return Center(
