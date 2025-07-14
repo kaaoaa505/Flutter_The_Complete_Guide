@@ -27,6 +27,12 @@ class Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = results();
+    final numOfQuestions = questions.length;
+    final numOfCorrectAnswers = data.where((item) {
+      return item['is_correct'] as String == 'Yes';
+    }).length;
+
     return Center(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -42,16 +48,11 @@ class Result extends StatelessWidget {
             label: const Text('Back Home.'),
             icon: const Icon(Icons.arrow_back),
           ),
-          Text('TODO: Result screen...', style: TextStyle(color: Colors.white)),
           Text(
-            'You answered x out of y questions correctly!.',
+            'You answered $numOfCorrectAnswers out of $numOfQuestions questions correctly!.',
             style: TextStyle(color: Colors.white),
           ),
-          Text(
-            'List of questions and answers....',
-            style: TextStyle(color: Colors.white),
-          ),
-          SummaryUi(data: results())
+          SummaryUi(data: data),
         ],
       ),
     );
