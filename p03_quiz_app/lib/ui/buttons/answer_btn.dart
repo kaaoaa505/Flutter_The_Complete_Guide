@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class AnswerBtn extends StatelessWidget {
   AnswerBtn({super.key, required this.txt, required this.fun});
 

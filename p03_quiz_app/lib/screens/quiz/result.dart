@@ -9,7 +9,7 @@ class Result extends StatelessWidget {
   final void Function(String) changeScreen;
   List<String> answers = [];
 
-  List<Map<String, Object>> results() {
+  List<Map<String, Object>> get results {
     List<Map<String, Object>> summary = [];
 
     for (var i = 0; i < answers.length; i++) {
@@ -27,7 +27,7 @@ class Result extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final data = results();
+    final data = results;
     final numOfQuestions = questions.length;
     final numOfCorrectAnswers = data.where((item) {
       return item['is_correct'] as String == 'Yes';
