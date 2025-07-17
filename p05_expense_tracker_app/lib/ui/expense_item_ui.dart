@@ -9,16 +9,34 @@ class ExpenseItemUi extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      child: Column(
-        children: [
-          SizedBox(height: 10),
-          Text(expense.id),
-          Text(expense.title),
-          Text('${expense.amount}\$'),
-          Text(expense.createdAt.toString()),
-          Text(expense.categoryEnum.name),
-          SizedBox(height: 10),
-        ],
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        child: Column(
+          children: [
+            Text(expense.title),
+            SizedBox(height: 10),
+            Text(expense.id),
+            SizedBox(height: 10),
+            Text(expense.categoryEnum.name),
+            SizedBox(height: 10),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('\$${expense.amount.toStringAsFixed(1)}'),
+                Spacer(),
+                Row(
+                  children: [
+                    Icon(Icons.alarm),
+                    SizedBox(width: 5),
+                    Text(expense.createdAt.toString().substring(0, 10)),
+                    SizedBox(width: 5),
+                    Text(expense.createdAt.toString().substring(11, 15)),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
