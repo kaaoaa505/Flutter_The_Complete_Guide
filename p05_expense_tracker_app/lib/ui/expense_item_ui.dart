@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/enums/category_enum.dart';
 import 'package:expense_tracker_app/models/expense_model.dart';
 import 'package:flutter/material.dart';
 
@@ -26,11 +27,9 @@ class ExpenseItemUi extends StatelessWidget {
                 Spacer(),
                 Row(
                   children: [
-                    Icon(Icons.alarm),
+                    Icon(categoryIcons[expense.categoryEnum]),
                     SizedBox(width: 5),
-                    Text(expense.createdAt.toString().substring(0, 10)),
-                    SizedBox(width: 5),
-                    Text(expense.createdAt.toString().substring(11, 15)),
+                    Text(expense.createdAtFormatted),
                   ],
                 ),
               ],

@@ -1,7 +1,10 @@
 import 'package:expense_tracker_app/enums/category_enum.dart';
+import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 const uuid = Uuid();
+
+final formatter = DateFormat.yMd();
 
 class ExpenseModel {
   ExpenseModel({
@@ -16,4 +19,8 @@ class ExpenseModel {
   final double amount;
   final DateTime createdAt;
   final CategoryEnum categoryEnum;
+
+  String get createdAtFormatted {
+    return formatter.format(createdAt);
+  }
 }
