@@ -27,11 +27,27 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     ),
   ];
 
+  void addExpenseOverlay() {
+    showModalBottomSheet(
+      context: context,
+      builder: (ctx) => Text('Modal bottom sheet...'),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: CupertinoColors.inactiveGray,
-      appBar: AppBar(toolbarHeight: 0, backgroundColor: Colors.blueGrey),
+      backgroundColor: CupertinoColors.lightBackgroundGray,
+      appBar: AppBar(
+        title: Text(
+          'Flutter Expense Tracker',
+          style: TextStyle(color: CupertinoColors.lightBackgroundGray),
+        ),
+        actions: [
+          IconButton(onPressed: addExpenseOverlay, icon: Icon(Icons.add)),
+        ],
+        backgroundColor: Colors.blueGrey,
+      ),
       body: Column(
         children: [
           Text('The CHART'),
