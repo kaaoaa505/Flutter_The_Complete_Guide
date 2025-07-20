@@ -12,7 +12,14 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.all(16),
-      child: Column(children: []),
+      child: Column(
+        children: [
+          TextField(
+            maxLength: 50,
+            decoration: InputDecoration(label: Text('Title')),
+          ),
+        ],
+      ),
     );
   }
 }
