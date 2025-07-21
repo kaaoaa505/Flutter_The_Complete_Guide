@@ -9,6 +9,21 @@ class NewExpenseScreen extends StatefulWidget {
 
 class _NewExpenseScreenState extends State<NewExpenseScreen> {
   final _titleController = TextEditingController();
+  final _amountController = TextEditingController();
+
+  void _datePicker() {
+    final now = DateTime.now();
+
+    showDatePicker(context: context, firstDate: DateTime(now.year - 5), lastDate: DateTime(now.year + 5));
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    _titleController.dispose();
+    _amountController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +38,44 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
           ),
           Row(
             children: [
+              Expanded(
+                child: TextField(
+                  controller: _amountController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    label: Text('Amount'),
+                    prefix: Text('\$'),
+                  ),
+                ),
+              ),
+              SizedBox(width: 16),
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text('Date'),
+                    IconButton(
+                      onPressed: _datePicker,
+                      icon: Icon(Icons.calendar_month),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Row(
+            children: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Text('Cancel'),
+              ),
               ElevatedButton(
                 onPressed: () {
                   print(_titleController.text);
+                  print(_amountController.text);
                 },
                 child: Text('Save Expense'),
               ),
