@@ -8,6 +8,12 @@ class NewExpenseScreen extends StatefulWidget {
 }
 
 class _NewExpenseScreenState extends State<NewExpenseScreen> {
+  var _newTitle = '';
+
+  void _saveTitleInput(String inputValue) {
+    _newTitle = inputValue;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -15,8 +21,19 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
       child: Column(
         children: [
           TextField(
+            onChanged: _saveTitleInput,
             maxLength: 50,
             decoration: InputDecoration(label: Text('Title')),
+          ),
+          Row(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  print(_newTitle);
+                },
+                child: Text('Save Expense'),
+              ),
+            ],
           ),
         ],
       ),
