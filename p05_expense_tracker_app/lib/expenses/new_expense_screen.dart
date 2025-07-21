@@ -1,3 +1,4 @@
+import 'package:expense_tracker_app/models/expense_model.dart';
 import 'package:flutter/material.dart';
 
 class NewExpenseScreen extends StatefulWidget {
@@ -11,10 +12,22 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   final _titleController = TextEditingController();
   final _amountController = TextEditingController();
 
-  void _datePicker() {
+  DateTime? _dateValue;
+
+  void _datePicker() async {
     final now = DateTime.now();
 
-    showDatePicker(context: context, firstDate: DateTime(now.year - 5), lastDate: DateTime(now.year + 5));
+    var value = await showDatePicker(
+      context: context,
+      firstDate: DateTime(now.year - 5),
+      lastDate: DateTime(now.year + 5),
+    );
+
+    setState(() {
+      _dateValue = value;
+    });
+
+    print('Date Time is: ${formatter.format(_dateValue!)}');
   }
 
   @override
@@ -54,7 +67,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
                   mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Text('Date'),
+                    Text(_dateValue != null ? formatter.format(_dateValue!) : 'No date selected!.'),
                     IconButton(
                       onPressed: _datePicker,
                       icon: Icon(Icons.calendar_month),
