@@ -128,7 +128,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(15,50,15,15),
       child: Column(
         children: [
           TextField(
