@@ -34,6 +34,12 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     });
   }
 
+  void removeExpense(ExpenseModel expense) {
+    setState(() {
+      expenses.remove(expense);
+    });
+  }
+
   void addExpenseOverlay() {
     showModalBottomSheet(
       isScrollControlled: true,
@@ -60,7 +66,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         children: [
           Text('The CHART'),
           Text('Expenses List...'),
-          Expanded(child: ExpensesListUi(expenses: expenses)),
+          Expanded(child: ExpensesListUi(expenses: expenses, removeExpense: removeExpense)),
         ],
       ),
     );

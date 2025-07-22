@@ -86,7 +86,7 @@ class _NewExpenseScreenState extends State<NewExpenseScreen> {
 
     final amount = double.tryParse(amountText);
 
-    if (_dateValue == null || _dateValue.toString().trim().isEmpty) {
+    if (_dateValue == null) {
       showDialog(
         context: context,
         builder: (ctx) => AlertDialog(
