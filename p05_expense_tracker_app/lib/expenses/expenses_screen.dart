@@ -35,9 +35,28 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   }
 
   void removeExpense(ExpenseModel expense) {
+    final expenseIndex = expenses.indexOf(expense);
+
     setState(() {
       expenses.remove(expense);
     });
+
+    ScaffoldMessenger.of(context).clearSnackBars();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Expense [${expense.title}] removed successfully.'),
+        duration: Duration(seconds: 3),
+        action: SnackBarAction(
+          label: 'Undo',
+          onPressed: () {
+            setState(() {
+              expenses.insert(expenseIndex, expense);
+            });
+          },
+        ),
+      ),
+    );
   }
 
   void addExpenseOverlay() {
@@ -50,6 +69,13 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Widget expensesList = ExpensesListUi(
+      expenses: expenses,
+      removeExpense: removeExpense,
+    );
+
+    Widget noExpensesFound = Center(child: Text('No expenses found.'));
+
     return Scaffold(
       backgroundColor: CupertinoColors.lightBackgroundGray,
       appBar: AppBar(
@@ -66,7 +92,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
         children: [
           Text('The CHART'),
           Text('Expenses List...'),
-          Expanded(child: ExpensesListUi(expenses: expenses, removeExpense: removeExpense)),
+          Expanded(child: expenses.isNotEmpty ? expensesList : noExpensesFound),
         ],
       ),
     );
