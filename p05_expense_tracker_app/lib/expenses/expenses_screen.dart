@@ -77,16 +77,11 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
     Widget noExpensesFound = Center(child: Text('No expenses found.'));
 
     return Scaffold(
-      backgroundColor: CupertinoColors.lightBackgroundGray,
       appBar: AppBar(
-        title: Text(
-          'Flutter Expense Tracker',
-          style: TextStyle(color: CupertinoColors.lightBackgroundGray),
-        ),
+        title: Text('Flutter Expense Tracker'),
         actions: [
           IconButton(onPressed: addExpenseOverlay, icon: Icon(Icons.add)),
         ],
-        backgroundColor: Colors.blueGrey,
       ),
       body: Column(
         children: [
