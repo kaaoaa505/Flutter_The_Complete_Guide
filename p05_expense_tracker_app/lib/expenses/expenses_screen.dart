@@ -1,6 +1,7 @@
 import 'package:expense_tracker_app/enums/category_enum.dart';
 import 'package:expense_tracker_app/expenses/new_expense_screen.dart';
 import 'package:expense_tracker_app/models/expense_model.dart';
+import 'package:expense_tracker_app/ui/charts/chart_ui.dart';
 import 'package:expense_tracker_app/ui/expenses_list_ui.dart';
 import 'package:flutter/material.dart';
 
@@ -84,7 +85,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
       ),
       body: Column(
         children: [
-          Text('The CHART'),
+          ChartUi(expenses: expenses),
           Text('Expenses List...'),
           Expanded(child: expenses.isNotEmpty ? expensesList : noExpensesFound),
         ],
