@@ -3,7 +3,6 @@ import 'package:expense_tracker_app/ui/expense_item_ui.dart';
 import 'package:flutter/material.dart';
 
 class ExpensesListUi extends StatelessWidget {
-
   const ExpensesListUi({
     super.key,
     required this.expenses,
@@ -11,7 +10,7 @@ class ExpensesListUi extends StatelessWidget {
   });
 
   final List<ExpenseModel> expenses;
-  
+
   final void Function(ExpenseModel expense) removeExpense;
 
   @override
@@ -19,6 +18,12 @@ class ExpensesListUi extends StatelessWidget {
     return ListView.builder(
       itemBuilder: (ctx, index) => Dismissible(
         key: ValueKey(expenses[index]),
+        background: Container(
+          color: Theme.of(context).colorScheme.error.withAlpha(111),
+          margin: EdgeInsets.symmetric(
+            horizontal: Theme.of(context).cardTheme.margin!.horizontal,
+          ),
+        ),
         child: ExpenseItemUi(expense: expenses[index]),
         onDismissed: (direction) {
           removeExpense(expenses[index]);
