@@ -76,6 +76,8 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
 
     Widget noExpensesFound = Center(child: Text('No expenses found.'));
 
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Flutter Expense Tracker'),
@@ -83,13 +85,23 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           IconButton(onPressed: addExpenseOverlay, icon: Icon(Icons.add)),
         ],
       ),
-      body: Column(
-        children: [
-          ChartUi(expenses: expenses),
-          Text('Expenses List...'),
-          Expanded(child: expenses.isNotEmpty ? expensesList : noExpensesFound),
-        ],
-      ),
+      body: width < 600
+          ? Column(
+              children: [
+                ChartUi(expenses: expenses),
+                Expanded(
+                  child: expenses.isNotEmpty ? expensesList : noExpensesFound,
+                ),
+              ],
+            )
+          : Row(
+              children: [
+                Expanded(child: ChartUi(expenses: expenses)),
+                Expanded(
+                  child: expenses.isNotEmpty ? expensesList : noExpensesFound,
+                ),
+              ],
+            ),
     );
   }
 }
