@@ -1,26 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_internals/ui_demo_buttons.dart';
 
 class UIUpdatesDemo extends StatefulWidget {
   const UIUpdatesDemo({super.key});
 
   @override
   StatefulElement createElement() {
-    print('UIUpdatesDemo CREATEELEMENT called');
+    print('UIUpdatesDemo createElement() called');
     return super.createElement();
   }
 
   @override
   State<UIUpdatesDemo> createState() {
+    print('UIUpdatesDemo createState() called');
     return _UIUpdatesDemo();
   }
 }
 
 class _UIUpdatesDemo extends State<UIUpdatesDemo> {
-  var _isUnderstood = false;
 
   @override
   Widget build(BuildContext context) {
-    print('UIUpdatesDemo BUILD called');
+    print('UIUpdatesDemo build(BuildContext context) called');
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Center(
@@ -39,28 +40,7 @@ class _UIUpdatesDemo extends State<UIUpdatesDemo> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 24),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isUnderstood = false;
-                    });
-                  },
-                  child: const Text('No'),
-                ),
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isUnderstood = true;
-                    });
-                  },
-                  child: const Text('Yes'),
-                ),
-              ],
-            ),
-            if (_isUnderstood) const Text('Awesome!'),
+            UiDemoButtons(),
           ],
         ),
       ),
