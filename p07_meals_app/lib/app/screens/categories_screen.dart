@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:p07_meals_app/app/data/available_categories_data.dart';
+import 'package:p07_meals_app/app/ui/category_grid_item_ui.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
@@ -15,12 +17,8 @@ class CategoriesScreen extends StatelessWidget {
           mainAxisSpacing: 20,
         ),
         children: [
-          Text('1'),
-          Text('2'),
-          Text('3'),
-          Text('4'),
-          Text('5'),
-          Text('6'),
+          for (final categoryData in availableCategoriesData)
+            CategoryGridItemUi(categoryModel: categoryData),
         ],
       ),
     );
