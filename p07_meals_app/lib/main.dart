@@ -29,6 +29,10 @@ class App extends StatelessWidget {
           color: colorScheme.primary,
           fontWeight: FontWeight.bold,
         ),
+        titleSmall: GoogleFonts.lato(
+          color: colorScheme.onSurface,
+          fontSize: 24,
+        ),
       ),
     );
 
