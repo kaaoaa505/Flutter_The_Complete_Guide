@@ -5,9 +5,10 @@ import 'package:p07_meals_app/app/ui/meal_item_metadata_ui.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItemUi extends StatelessWidget {
-  const MealItemUi({super.key, required this.mealModel});
+  const MealItemUi({super.key, required this.mealModel, required this.toggleMealFavorite});
 
   final MealModel mealModel;
+final void Function(MealModel meal) toggleMealFavorite;
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class MealItemUi extends StatelessWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (ctx) => MealDetailsScreen(meal: mealModel),
+              builder: (ctx) => MealDetailsScreen(meal: mealModel, toggleMealFavorite: toggleMealFavorite),
             ),
           );
         },
