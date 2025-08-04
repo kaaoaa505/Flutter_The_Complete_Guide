@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:p07_meals_app/app/screens/categories_screen.dart';
+import 'package:p07_meals_app/app/screens/tabs_screen.dart';
 
 void main() {
   runApp(const App());
@@ -25,13 +25,13 @@ class App extends StatelessWidget {
         bodyLarge: GoogleFonts.lato(color: Colors.white),
         bodyMedium: GoogleFonts.lato(color: Colors.white),
         headlineMedium: GoogleFonts.lato(color: Colors.white),
-        titleLarge: GoogleFonts.lato(color: colorScheme.primary, fontWeight: FontWeight.bold),
+        titleLarge: GoogleFonts.lato(
+          color: colorScheme.primary,
+          fontWeight: FontWeight.bold,
+        ),
       ),
     );
 
-    return MaterialApp(
-      theme: theme,
-      home: const CategoriesScreen(),
-    );
+    return MaterialApp(theme: theme, home: TabsScreen());
   }
 }
