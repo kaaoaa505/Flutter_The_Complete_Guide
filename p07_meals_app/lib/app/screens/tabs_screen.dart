@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:p07_meals_app/app/models/meal_model.dart';
 import 'package:p07_meals_app/app/screens/categories_screen.dart';
+import 'package:p07_meals_app/app/screens/filters_screen.dart';
 import 'package:p07_meals_app/app/screens/meals_screen.dart';
 import 'package:p07_meals_app/app/ui/main_drawer_ui.dart';
 
@@ -41,6 +42,30 @@ class _TabsScreenState extends State<TabsScreen> {
     });
   }
 
+  void selectScreen(String identifier) {
+    Navigator.of(context).pop();
+
+    if (identifier == 'filters') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) {
+            return FiltersScreen(selectScreen: selectScreen);
+          },
+        ),
+      );
+    }
+
+    if (identifier == 'meals') {
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (ctx) {
+            return TabsScreen();
+          },
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var activePageTitle = 'Categories';
@@ -59,7 +84,7 @@ class _TabsScreenState extends State<TabsScreen> {
 
     return Scaffold(
       appBar: AppBar(title: Text(activePageTitle)),
-      drawer: MainDrawerUi(),
+      drawer: MainDrawerUi(selectScreen: selectScreen),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,
