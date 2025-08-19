@@ -4,6 +4,7 @@ import 'package:p07_meals_app/app/enums/filters_enum.dart';
 import 'package:p07_meals_app/app/global/k_initial_filters.dart';
 import 'package:p07_meals_app/app/models/meal_model.dart';
 import 'package:p07_meals_app/app/providers/favorites_provider.dart';
+import 'package:p07_meals_app/app/providers/filters_provider.dart';
 import 'package:p07_meals_app/app/providers/meals_provider.dart';
 import 'package:p07_meals_app/app/screens/categories_screen.dart';
 import 'package:p07_meals_app/app/screens/filters_screen.dart';
@@ -34,20 +35,13 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     Navigator.of(context).pop();
 
     if (identifier == 'filters') {
-      final result = await Navigator.of(context).push<Map<FiltersEnum, bool>>(
+      await Navigator.of(context).push<Map<FiltersEnum, bool>>(
         MaterialPageRoute(
           builder: (ctx) {
-            return FiltersScreen(
-              selectScreen: selectScreen,
-              currentFilters: _selectedFilters,
-            );
+            return FiltersScreen(selectScreen: selectScreen);
           },
         ),
       );
-
-      setState(() {
-        _selectedFilters = result ?? kInitialFilters;
-      });
     }
 
     if (identifier == 'meals') {
@@ -63,6 +57,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _selectedFilters = ref.watch(filtersProvider);
     final availableMeals = ref.watch(mealsProvider).where((meal) {
       if (_selectedFilters[FiltersEnum.glutenFree]! && !meal.isGlutenFree) {
         return false;
@@ -79,16 +74,11 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       return true;
     }).toList();
     var activePageTitle = 'Categories';
-    Widget activePage = CategoriesScreen(
-      availableMeals: availableMeals,
-    );
+    Widget activePage = CategoriesScreen(availableMeals: availableMeals);
 
     if (_selectedPageIndex == 1) {
       activePageTitle = 'Your Favorites';
-      activePage = MealsScreen(
-        title: '',
-        meals: ref.watch(favoritesProvider),
-      );
+      activePage = MealsScreen(title: '', meals: ref.watch(favoritesProvider));
     }
 
     return Scaffold(

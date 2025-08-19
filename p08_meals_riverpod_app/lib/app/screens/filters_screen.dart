@@ -1,32 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:p07_meals_app/app/enums/filters_enum.dart';
+import 'package:p07_meals_app/app/providers/filters_provider.dart';
 
-class FiltersScreen extends StatefulWidget {
-  const FiltersScreen({
-    super.key,
-    required this.selectScreen,
-    required this.currentFilters,
-  });
+class FiltersScreen extends ConsumerStatefulWidget {
+  const FiltersScreen({super.key, required this.selectScreen});
   final void Function(String identifier) selectScreen;
-  final Map<FiltersEnum, bool> currentFilters;
   @override
-  State<FiltersScreen> createState() => _FiltersScreenState();
+  ConsumerState<FiltersScreen> createState() => _FiltersScreenState();
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
-  var _isSetGlutenFreeFilter = false;
-  var _isSetLactoseFreeFilter = false;
-  var _isSetVegetarianFreeFilter = false;
-  var _isSetVeganFreeFilter = false;
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
+  bool _isSetGlutenFreeFilter = false;
+  bool _isSetLactoseFreeFilter = false;
+  bool _isSetVegetarianFreeFilter = false;
+  bool _isSetVeganFreeFilter = false;
 
   @override
   void initState() {
     super.initState();
 
-    _isSetGlutenFreeFilter = widget.currentFilters[FiltersEnum.glutenFree]!;
-    _isSetLactoseFreeFilter = widget.currentFilters[FiltersEnum.lactoseFree]!;
-    _isSetVegetarianFreeFilter = widget.currentFilters[FiltersEnum.vegetarian]!;
-    _isSetVeganFreeFilter = widget.currentFilters[FiltersEnum.vegan]!;
+    final currentFilters = ref.read(filtersProvider);
+
+    _isSetGlutenFreeFilter = currentFilters[FiltersEnum.glutenFree]!;
+    _isSetLactoseFreeFilter = currentFilters[FiltersEnum.lactoseFree]!;
+    _isSetVegetarianFreeFilter = currentFilters[FiltersEnum.vegetarian]!;
+    _isSetVeganFreeFilter = currentFilters[FiltersEnum.vegan]!;
   }
 
   @override
@@ -37,12 +36,14 @@ class _FiltersScreenState extends State<FiltersScreen> {
         canPop: false,
         onPopInvoked: (didPop) {
           if (!didPop) {
-            Navigator.of(context).pop({
+            ref.read(filtersProvider.notifier).setAllFilters({
               FiltersEnum.glutenFree: _isSetGlutenFreeFilter,
               FiltersEnum.lactoseFree: _isSetLactoseFreeFilter,
               FiltersEnum.vegetarian: _isSetVegetarianFreeFilter,
               FiltersEnum.vegan: _isSetVeganFreeFilter,
             });
+            
+            Navigator.of(context).pop();
           }
         },
         child: ListView(
