@@ -10,6 +10,9 @@ class MealDetailsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final favorites = ref.watch(favoritesProvider);
+    final isFav = favorites.contains(meal);
+
     void showInfoMessage(String message) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(
@@ -30,7 +33,7 @@ class MealDetailsScreen extends ConsumerWidget {
                   ? showInfoMessage('Meal added to favorites')
                   : showInfoMessage('Meal removed from favorites');
             },
-            icon: Icon(Icons.star_border_outlined),
+            icon: Icon(isFav ? Icons.star : Icons.star_border_outlined),
           ),
         ],
       ),
