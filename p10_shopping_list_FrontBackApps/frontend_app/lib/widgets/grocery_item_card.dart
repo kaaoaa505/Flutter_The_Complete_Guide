@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/grocery_item_model.dart';
 
 class GroceryItemCard extends StatelessWidget {
-  final GroceryItem item;
+  final GroceryItemModel item;
   final VoidCallback onToggle;
   final VoidCallback onDelete;
   final VoidCallback onEdit;

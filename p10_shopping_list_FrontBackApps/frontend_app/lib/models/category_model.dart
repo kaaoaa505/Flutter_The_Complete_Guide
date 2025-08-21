@@ -1,16 +1,16 @@
-class Category {
+class CategoryModel {
   final int? id;
   final String name;
   final String color;
 
-  Category({
+  CategoryModel({
     this.id,
     required this.name,
     required this.color,
   });
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
       id: json['id'],
       name: json['name'],
       color: json['color'],
@@ -25,12 +25,12 @@ class Category {
     };
   }
 
-  Category copyWith({
+  CategoryModel copyWith({
     int? id,
     String? name,
     String? color,
   }) {
-    return Category(
+    return CategoryModel(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
@@ -39,13 +39,13 @@ class Category {
 
   @override
   String toString() {
-    return 'Category(id: $id, name: $name, color: $color)';
+    return 'CategoryModel(id: $id, name: $name, color: $color)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Category &&
+    return other is CategoryModel &&
         other.id == id &&
         other.name == name &&
         other.color == color;

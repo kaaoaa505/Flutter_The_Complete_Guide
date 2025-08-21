@@ -8,24 +8,29 @@ class ApiService {
   static const String baseUrl = CategoriesData.baseUrl;
 
   // Categories API
-  static Future<List<Category>> getCategories() async {
+  static Future<List<CategoryModel>> getCategories() async {
     try {
+      print('Attempting to fetch categories from: $baseUrl/categories');
       final response = await http.get(Uri.parse('$baseUrl/categories'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        return data.map((json) => Category.fromJson(json)).toList();
+        return data.map((json) => CategoryModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load categories: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching categories: $e');
+      print('Full error details: ${e.toString()}');
       // Return default categories as fallback
       return CategoriesData.defaultCategories;
     }
   }
 
-  static Future<Category> createCategory(String name, String color) async {
+  static Future<CategoryModel> createCategory(String name, String color) async {
     try {
       final response = await http.post(
         Uri.parse('$baseUrl/categories'),
@@ -34,7 +39,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return Category.fromJson(json.decode(response.body));
+        return CategoryModel.fromJson(json.decode(response.body));
       } else {
         throw Exception('Failed to create category: ${response.statusCode}');
       }
@@ -44,23 +49,28 @@ class ApiService {
   }
 
   // Grocery Items API
-  static Future<List<GroceryItem>> getGroceryItems() async {
+  static Future<List<GroceryItemModel>> getGroceryItems() async {
     try {
+      print('Attempting to fetch grocery items from: $baseUrl/grocery-items');
       final response = await http.get(Uri.parse('$baseUrl/grocery-items'));
+
+      print('Response status: ${response.statusCode}');
+      print('Response body: ${response.body}');
 
       if (response.statusCode == 200) {
         final List<dynamic> data = json.decode(response.body);
-        return data.map((json) => GroceryItem.fromJson(json)).toList();
+        return data.map((json) => GroceryItemModel.fromJson(json)).toList();
       } else {
         throw Exception('Failed to load grocery items: ${response.statusCode}');
       }
     } catch (e) {
       print('Error fetching grocery items: $e');
+      print('Full error details: ${e.toString()}');
       return [];
     }
   }
 
-  static Future<GroceryItem> createGroceryItem(
+  static Future<GroceryItemModel> createGroceryItem(
       String name, int quantity, int? categoryId) async {
     try {
       final response = await http.post(
@@ -74,7 +84,7 @@ class ApiService {
       );
 
       if (response.statusCode == 200) {
-        return GroceryItem.fromJson(json.decode(response.body));
+        return GroceryItemModel.fromJson(json.decode(response.body));
       } else {
         throw Exception(
             'Failed to create grocery item: ${response.statusCode}');

@@ -4,21 +4,21 @@ import '../models/grocery_item_model.dart';
 import '../services/api_service.dart';
 
 class ShoppingListProvider with ChangeNotifier {
-  List<Category> _categories = [];
-  List<GroceryItem> _groceryItems = [];
+  List<CategoryModel> _categories = [];
+  List<GroceryItemModel> _groceryItems = [];
   bool _isLoading = false;
   String? _error;
 
   // Getters
-  List<Category> get categories => _categories;
-  List<GroceryItem> get groceryItems => _groceryItems;
+  List<CategoryModel> get categories => _categories;
+  List<GroceryItemModel> get groceryItems => _groceryItems;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
   // Get completed and pending items
-  List<GroceryItem> get completedItems =>
+  List<GroceryItemModel> get completedItems =>
       _groceryItems.where((item) => item.isCompleted).toList();
-  List<GroceryItem> get pendingItems =>
+  List<GroceryItemModel> get pendingItems =>
       _groceryItems.where((item) => !item.isCompleted).toList();
 
   // Initialize data
@@ -73,7 +73,7 @@ class ShoppingListProvider with ChangeNotifier {
   }
 
   // Update grocery item
-  Future<void> updateGroceryItem(GroceryItem item) async {
+  Future<void> updateGroceryItem(GroceryItemModel item) async {
     try {
       await ApiService.updateGroceryItem(
         item.id!,
@@ -151,7 +151,7 @@ class ShoppingListProvider with ChangeNotifier {
   }
 
   // Get category by ID
-  Category? getCategoryById(int? id) {
+  CategoryModel? getCategoryById(int? id) {
     if (id == null) return null;
     try {
       return _categories.firstWhere((category) => category.id == id);
@@ -161,7 +161,7 @@ class ShoppingListProvider with ChangeNotifier {
   }
 
   // Get items by category
-  List<GroceryItem> getItemsByCategory(int? categoryId) {
+  List<GroceryItemModel> getItemsByCategory(int? categoryId) {
     return _groceryItems
         .where((item) => item.categoryId == categoryId)
         .toList();

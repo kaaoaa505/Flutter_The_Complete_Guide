@@ -14,7 +14,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _quantityController = TextEditingController(text: '1');
-  Category? _selectedCategory;
+  CategoryModel? _selectedCategory;
 
   @override
   void dispose() {
@@ -67,19 +67,19 @@ class _AddItemDialogState extends State<AddItemDialog> {
                   },
                 ),
                 const SizedBox(height: 16),
-                DropdownButtonFormField<Category>(
+                DropdownButtonFormField<CategoryModel>(
                   value: _selectedCategory,
                   decoration: const InputDecoration(
                     labelText: 'Category (Optional)',
                     border: OutlineInputBorder(),
                   ),
                   items: [
-                    const DropdownMenuItem<Category>(
+                    const DropdownMenuItem<CategoryModel>(
                       value: null,
                       child: Text('No Category'),
                     ),
                     ...provider.categories.map((category) {
-                      return DropdownMenuItem<Category>(
+                      return DropdownMenuItem<CategoryModel>(
                         value: category,
                         child: Row(
                           children: [
@@ -98,7 +98,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
                       );
                     }).toList(),
                   ],
-                  onChanged: (Category? value) {
+                  onChanged: (CategoryModel? value) {
                     setState(() {
                       _selectedCategory = value;
                     });

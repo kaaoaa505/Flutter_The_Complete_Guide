@@ -1,4 +1,4 @@
-class GroceryItem {
+class GroceryItemModel {
   final int? id;
   final String name;
   final int quantity;
@@ -8,7 +8,7 @@ class GroceryItem {
   final bool isCompleted;
   final String? createdAt;
 
-  GroceryItem({
+  GroceryItemModel({
     this.id,
     required this.name,
     required this.quantity,
@@ -19,8 +19,8 @@ class GroceryItem {
     this.createdAt,
   });
 
-  factory GroceryItem.fromJson(Map<String, dynamic> json) {
-    return GroceryItem(
+  factory GroceryItemModel.fromJson(Map<String, dynamic> json) {
+    return GroceryItemModel(
       id: json['id'],
       name: json['name'],
       quantity: json['quantity'],
@@ -45,7 +45,7 @@ class GroceryItem {
     };
   }
 
-  GroceryItem copyWith({
+  GroceryItemModel copyWith({
     int? id,
     String? name,
     int? quantity,
@@ -55,7 +55,7 @@ class GroceryItem {
     bool? isCompleted,
     String? createdAt,
   }) {
-    return GroceryItem(
+    return GroceryItemModel(
       id: id ?? this.id,
       name: name ?? this.name,
       quantity: quantity ?? this.quantity,
@@ -69,13 +69,13 @@ class GroceryItem {
 
   @override
   String toString() {
-    return 'GroceryItem(id: $id, name: $name, quantity: $quantity, categoryId: $categoryId, categoryName: $categoryName, isCompleted: $isCompleted)';
+    return 'GroceryItemModel(id: $id, name: $name, quantity: $quantity, categoryId: $categoryId, categoryName: $categoryName, isCompleted: $isCompleted)';
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is GroceryItem &&
+    return other is GroceryItemModel &&
         other.id == id &&
         other.name == name &&
         other.quantity == quantity &&
