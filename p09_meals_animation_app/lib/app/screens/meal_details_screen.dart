@@ -33,7 +33,19 @@ class MealDetailsScreen extends ConsumerWidget {
                   ? showInfoMessage('Meal added to favorites')
                   : showInfoMessage('Meal removed from favorites');
             },
-            icon: Icon(isFav ? Icons.star : Icons.star_border_outlined),
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Icon(
+                isFav ? Icons.star : Icons.star_border_outlined,
+                key: ValueKey(isFav),
+              ),
+              transitionBuilder: (child, animation) {
+                return RotationTransition(
+                  turns: Tween<double>(begin: 0.5, end: 1).animate(animation),
+                  child: child,
+                );
+              },
+            ),
           ),
         ],
       ),
