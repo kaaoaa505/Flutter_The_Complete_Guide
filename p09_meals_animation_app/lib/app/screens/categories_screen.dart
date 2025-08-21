@@ -16,7 +16,8 @@ class CategoriesScreen extends StatefulWidget {
 
 class _CategoriesScreenState extends State<CategoriesScreen>
     with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
+  late final AnimationController _animationController;
+  late final Animation<Offset> _slideAnimation;
 
   @override
   void initState() {
@@ -24,9 +25,17 @@ class _CategoriesScreenState extends State<CategoriesScreen>
 
     _animationController = AnimationController(
       vsync: this,
-      duration: Duration(milliseconds: 300),
-      lowerBound: 0,
-      upperBound: 1,
+      duration: const Duration(milliseconds: 300),
+    );
+
+    _slideAnimation = Tween<Offset>(
+      begin: const Offset(0, 0.30),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
     );
 
     _animationController.forward();
@@ -35,27 +44,22 @@ class _CategoriesScreenState extends State<CategoriesScreen>
   @override
   void dispose() {
     _animationController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     void selectCategory(CategoryModel categoryModel) {
-      List<MealModel> meals = widget.availableMeals
-          .where(
-            (meal) =>
-                meal.categories.indexWhere(
-                  (categoryId) => categoryId == categoryModel.id,
-                ) >
-                0,
-          )
+      final meals = widget.availableMeals
+          .where((meal) => meal.categories.contains(categoryModel.id))
           .toList();
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) =>
-              MealsScreen(title: categoryModel.title, meals: meals),
+          builder: (ctx) => MealsScreen(
+            title: categoryModel.title,
+            meals: meals,
+          ),
         ),
       );
     }
@@ -63,7 +67,8 @@ class _CategoriesScreenState extends State<CategoriesScreen>
     return AnimatedBuilder(
       animation: _animationController,
       child: GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: 3 / 2,
           crossAxisSpacing: 20,
@@ -78,8 +83,8 @@ class _CategoriesScreenState extends State<CategoriesScreen>
         ],
       ),
       builder: (ctx, child) {
-        return Padding(
-          padding: EdgeInsets.only(top: 100 - _animationController.value * 100),
+        return SlideTransition(
+          position: _slideAnimation,
           child: child,
         );
       },
