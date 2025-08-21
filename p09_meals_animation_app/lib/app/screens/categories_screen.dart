@@ -5,18 +5,44 @@ import 'package:p07_meals_app/app/models/meal_model.dart';
 import 'package:p07_meals_app/app/screens/meals_screen.dart';
 import 'package:p07_meals_app/app/ui/category_grid_item_ui.dart';
 
-class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({
-    super.key,
-    required this.availableMeals,
-  });
+class CategoriesScreen extends StatefulWidget {
+  const CategoriesScreen({super.key, required this.availableMeals});
 
   final List<MealModel> availableMeals;
 
   @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     void selectCategory(CategoryModel categoryModel) {
-      List<MealModel> meals = availableMeals
+      List<MealModel> meals = widget.availableMeals
           .where(
             (meal) =>
                 meal.categories.indexWhere(
@@ -28,28 +54,35 @@ class CategoriesScreen extends StatelessWidget {
 
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) => MealsScreen(
-            title: categoryModel.title,
-            meals: meals,
-          ),
+          builder: (ctx) =>
+              MealsScreen(title: categoryModel.title, meals: meals),
         ),
       );
     }
 
-    return GridView(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 3 / 2,
-        crossAxisSpacing: 20,
-        mainAxisSpacing: 20,
+    return AnimatedBuilder(
+      animation: _animationController,
+      child: GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 3 / 2,
+          crossAxisSpacing: 20,
+          mainAxisSpacing: 20,
+        ),
+        children: [
+          for (final categoryData in availableCategoriesData)
+            CategoryGridItemUi(
+              categoryModel: categoryData,
+              selectCategory: selectCategory,
+            ),
+        ],
       ),
-      children: [
-        for (final categoryData in availableCategoriesData)
-          CategoryGridItemUi(
-            categoryModel: categoryData,
-            selectCategory: selectCategory,
-          ),
-      ],
+      builder: (ctx, child) {
+        return Padding(
+          padding: EdgeInsets.only(top: 100 - _animationController.value * 100),
+          child: child,
+        );
+      },
     );
   }
 }
