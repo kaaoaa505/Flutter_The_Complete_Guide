@@ -1,15 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:p11_favorite_places_app/models/place_model.dart';
+import 'package:p11_favorite_places_app/providers/user_places_provider.dart';
 
-class AddPlaceScreen extends StatefulWidget {
+class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
-
   @override
-  State<AddPlaceScreen> createState() => AddPlaceScreenState();
+  ConsumerState<AddPlaceScreen> createState() => AddPlaceScreenState();
 }
 
-class AddPlaceScreenState extends State<AddPlaceScreen> {
+class AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
+
+  void _addPlace() {
+    final enterdTitle = _titleController.text;
+    if (enterdTitle.isEmpty) {
+      return;
+    }
+
+    ref
+        .read(userPlacesProvider.notifier)
+        .addPlace(PlaceModel(title: enterdTitle));
+
+    Navigator.of(context).pop();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +52,7 @@ class AddPlaceScreenState extends State<AddPlaceScreen> {
               ElevatedButton.icon(
                 onPressed: () {
                   if (_formKey.currentState!.validate()) {
-                    // Handle form submission
+                    _addPlace();
                   }
                 },
                 label: const Text('Add Place'),
