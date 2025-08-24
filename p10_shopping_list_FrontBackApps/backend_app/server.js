@@ -24,11 +24,11 @@ const db = new sqlite3.Database("./shopping_list.db", (err) => {
 
 // Initialize database tables
 function initDatabase() {
-  // Categories table
+  // Categories table with unique constraint on name
   db.run(
     `CREATE TABLE IF NOT EXISTS categories (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    name TEXT NOT NULL,
+    name TEXT NOT NULL UNIQUE,
     color TEXT NOT NULL
   )`,
     (err) => {
@@ -106,17 +106,31 @@ app.post("/api/categories", (req, res) => {
     return;
   }
 
-  db.run(
-    "INSERT INTO categories (name, color) VALUES (?, ?)",
-    [name, color],
-    function (err) {
-      if (err) {
-        res.status(500).json({ error: err.message });
-        return;
-      }
-      res.json({ id: this.lastID, name, color });
+  // First check if category with this name already exists
+  db.get("SELECT * FROM categories WHERE name = ?", [name], (err, row) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
     }
-  );
+
+    if (row) {
+      res.status(409).json({ error: "Category with this name already exists" });
+      return;
+    }
+
+    // If category doesn't exist, insert it
+    db.run(
+      "INSERT INTO categories (name, color) VALUES (?, ?)",
+      [name, color],
+      function (err) {
+        if (err) {
+          res.status(500).json({ error: err.message });
+          return;
+        }
+        res.json({ id: this.lastID, name, color });
+      }
+    );
+  });
 });
 
 // Get all grocery items

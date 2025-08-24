@@ -40,6 +40,10 @@ class ApiService {
 
       if (response.statusCode == 200) {
         return CategoryModel.fromJson(json.decode(response.body));
+      } else if (response.statusCode == 409) {
+        final errorData = json.decode(response.body);
+        throw Exception(
+            errorData['error'] ?? 'Category with this name already exists');
       } else {
         throw Exception('Failed to create category: ${response.statusCode}');
       }

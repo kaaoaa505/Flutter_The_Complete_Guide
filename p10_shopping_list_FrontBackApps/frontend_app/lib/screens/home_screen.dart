@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/shopping_list_provider.dart';
 import '../widgets/grocery_item_card.dart';
 import '../widgets/add_item_dialog.dart';
+import '../widgets/edit_item_dialog.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -223,10 +224,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void _showEditDialog(
       BuildContext context, ShoppingListProvider provider, dynamic item) {
-    // This would open an edit dialog similar to add dialog
-    // For now, we'll just show a simple message
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Edit functionality coming soon!')),
+    showDialog(
+      context: context,
+      builder: (context) => EditItemDialog(item: item),
     );
   }
 }
