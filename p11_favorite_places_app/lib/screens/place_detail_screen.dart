@@ -5,7 +5,7 @@ class PlaceDetailScreen extends StatelessWidget {
   const PlaceDetailScreen({super.key, required this.place});
 
   final PlaceModel place;
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,8 +13,12 @@ class PlaceDetailScreen extends StatelessWidget {
         title: Text(place.title),
       ),
       body: Center(
-        child: Text(place.title,
-              style: Theme.of(context).textTheme.bodyLarge,),
+        child: Image.file(
+          place.image,
+          fit: BoxFit.cover,
+          width: double.infinity,
+          height: double.infinity,
+        ),
       ),
     );
   }

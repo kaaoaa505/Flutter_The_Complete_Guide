@@ -32,7 +32,10 @@ class PlacesListUI extends StatelessWidget {
       itemCount: places.length,
       itemBuilder: (ctx, index) {
         return ListTile(
-          leading: const Icon(Icons.location_on),
+          leading: CircleAvatar(
+            radius: 26,
+            backgroundImage: FileImage(places[index].image),
+          ),
           title: Text(
             places[index].title,
             style: Theme.of(context).textTheme.titleMedium,
