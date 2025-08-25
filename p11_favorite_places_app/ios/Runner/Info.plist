@@ -11,6 +11,9 @@
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Record a sound from your microphone</string>
 
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>The location of your device is needed to display your favorite places</string>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
