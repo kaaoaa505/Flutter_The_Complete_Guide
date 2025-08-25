@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:p11_favorite_places_app/models/place_model.dart';
 import 'package:p11_favorite_places_app/providers/user_places_provider.dart';
+import 'package:p11_favorite_places_app/ui/image_input_ui.dart';
 
 class AddPlaceScreen extends ConsumerStatefulWidget {
   const AddPlaceScreen({super.key});
@@ -48,6 +49,8 @@ class AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
                   return null;
                 },
               ),
+              const SizedBox(height: 16.0),
+              ImageInputUI(),
               const SizedBox(height: 16.0),
               ElevatedButton.icon(
                 onPressed: () {
