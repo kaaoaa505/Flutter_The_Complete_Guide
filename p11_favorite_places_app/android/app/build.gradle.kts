@@ -8,8 +8,7 @@ plugins {
 android {
     namespace = "com.example.p11_favorite_places_app"
     compileSdk = flutter.compileSdkVersion
-    //ndkVersion = flutter.ndkVersion
-    ndkVersion = "27.0.12077973"
+    ndkVersion = "27.0.12077973" // keep fixed ndk version
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
@@ -20,21 +19,32 @@ android {
         jvmTarget = JavaVersion.VERSION_11.toString()
     }
 
+    // Read values from local.properties (safe, ignored by Git)
+    val localProps = gradle.rootProject.file("local.properties")
+    val props = java.util.Properties()
+    if (localProps.exists()) {
+        props.load(localProps.inputStream())
+    }
+
+    val flutterVersionCode = props.getProperty("flutter.versionCode") ?: "1"
+    val flutterVersionName = props.getProperty("flutter.versionName") ?: "1.0.0"
+    val googleMapsKey = props.getProperty("GOOGLE_MAPS_API_KEY") ?: ""
+
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId = "com.example.p11_favorite_places_app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
         targetSdk = flutter.targetSdkVersion
-        versionCode = flutter.versionCode
-        versionName = flutter.versionName
+        versionCode = flutterVersionCode.toInt()
+        versionName = flutterVersionName
+
+        // Inject API Key into manifest
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsKey
     }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
+            // Using debug signing so `flutter run --release` still works.
             signingConfig = signingConfigs.getByName("debug")
         }
     }
