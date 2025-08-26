@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:math';
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
 import 'package:p11_favorite_places_app/config/env.dart';
 import 'package:p11_favorite_places_app/models/location_model.dart';
+import 'package:p11_favorite_places_app/screens/map_screen.dart';
 
 class LocationInputUI extends StatefulWidget {
   const LocationInputUI({super.key, required this.selectLocation});
@@ -24,25 +25,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
   @override
   void initState() {
     super.initState();
-    // ✅ Get API key from environment variables - handle gracefully
     googleMapsKey = Env.googleMapsApiKey;
-
-    debugPrint('🔧 LocationInputUI initialized');
-    debugPrint('🔑 API Key length: ${googleMapsKey.length}');
-    debugPrint(
-        '🔑 API Key starts with: ${googleMapsKey.isNotEmpty ? googleMapsKey.substring(0, min(10, googleMapsKey.length)) : "EMPTY"}...');
-
-    if (googleMapsKey.isNotEmpty) {
-      debugPrint('✅ Google Maps API key is available and ready to use');
-      debugPrint('🔑 API Key loaded: ${googleMapsKey.substring(0, 10)}...');
-    } else {
-      debugPrint(
-          '⚠️ Warning: GOOGLE_MAPS_API_KEY not found in environment variables');
-      debugPrint(
-          '📝 Please create a .env file with GOOGLE_MAPS_API_KEY=your_key');
-      debugPrint(
-          '📋 Available env vars: ${Env.isApiKeyAvailable ? "API key available" : "No API key"}');
-    }
   }
 
   String get locationImage {
@@ -53,17 +36,30 @@ class _LocationInputUIState extends State<LocationInputUI> {
     return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&markers=color:blue|label:A|$lat,$lng&key=$googleMapsKey';
   }
 
+  void _savePlace(double lat, double lng, String address) {
+    setState(() {
+      isGettingLocation = true;
+
+      _pickedLocation = LocationModel(
+        latitude: lat,
+        longitude: lng,
+        address: address,
+      );
+
+      widget.selectLocation(_pickedLocation!);
+
+      isGettingLocation = false;
+    });
+  }
+
   Future<void> _getCurrentLocation() async {
-    if (isGettingLocation) return; // Prevent multiple simultaneous requests
+    if (isGettingLocation) return;
 
     try {
-      setState(() {
-        isGettingLocation = true;
-      });
+      setState(() => isGettingLocation = true);
 
       final location = Location();
 
-      // ✅ Check service with timeout
       bool serviceEnabled = await location.serviceEnabled().timeout(
             const Duration(seconds: 5),
             onTimeout: () => false,
@@ -79,7 +75,6 @@ class _LocationInputUIState extends State<LocationInputUI> {
         }
       }
 
-      // ✅ Check permission with timeout
       PermissionStatus permissionGranted =
           await location.hasPermission().timeout(
                 const Duration(seconds: 5),
@@ -96,7 +91,6 @@ class _LocationInputUIState extends State<LocationInputUI> {
         }
       }
 
-      // ✅ Get location with timeout
       final locationData = await location.getLocation().timeout(
             const Duration(seconds: 10),
             onTimeout: () =>
@@ -110,8 +104,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
         return;
       }
 
-      // ✅ Fetch address from Google Maps Geocoding API with timeout
-      String address = 'Unknown location';
+      String address = 'Location at $lat, $lng';
 
       if (googleMapsKey.isNotEmpty) {
         try {
@@ -119,67 +112,67 @@ class _LocationInputUIState extends State<LocationInputUI> {
             'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&result_type=street_address&location_type=ROOFTOP&key=$googleMapsKey',
           );
 
-          debugPrint(
-              '🌍 Making geocoding request to: ${url.toString().replaceAll(googleMapsKey, 'API_KEY_HIDDEN')}');
-          debugPrint('📍 Coordinates: $lat, $lng');
-
           final response = await http.get(url).timeout(
                 const Duration(seconds: 10),
                 onTimeout: () =>
                     throw TimeoutException('Geocoding request timed out'),
               );
 
-          debugPrint('📡 Response status code: ${response.statusCode}');
-          debugPrint('📡 Response headers: ${response.headers}');
-
           final resJsonBody = json.decode(response.body);
-
-          // Log the complete JSON response for debugging
-          debugPrint('🔍 Full Geocoding API Response:');
-          debugPrint(json.encode(resJsonBody));
 
           if (resJsonBody['status'] == 'OK' &&
               resJsonBody['results'] != null &&
               resJsonBody['results'].isNotEmpty) {
             address = resJsonBody['results'][0]['formatted_address'];
-            debugPrint('✅ Address resolved: $address');
-          } else {
-            debugPrint(
-                '⚠️ Geocoding failed - Status: ${resJsonBody['status']}');
-            debugPrint(
-                '⚠️ Results count: ${resJsonBody['results']?.length ?? 0}');
-            if (resJsonBody['error_message'] != null) {
-              debugPrint('❌ Error message: ${resJsonBody['error_message']}');
-            }
-            address = 'Location at $lat, $lng';
           }
-        } catch (e) {
-          debugPrint('❌ Error fetching address: $e');
+        } catch (_) {
           address = 'Location at $lat, $lng';
         }
-      } else {
-        // Fallback when no API key is available
-        debugPrint(
-            '⚠️ No Google Maps API key available - using coordinate fallback');
-        address = 'Location at $lat, $lng';
       }
 
       if (mounted) {
-        setState(() {
-          _pickedLocation = LocationModel(
-            latitude: lat,
-            longitude: lng,
-            address: address,
-          );
-          isGettingLocation = false;
-        });
-
-        widget.selectLocation(_pickedLocation!);
+        _savePlace(lat, lng, address);
       }
-    } catch (e) {
+    } catch (_) {
       if (mounted) setState(() => isGettingLocation = false);
-      debugPrint("❌ Error getting location: $e");
     }
+  }
+
+  void _selectOnMap() async {
+    final pickedLocation = await Navigator.of(context)
+        .push<LatLng>(MaterialPageRoute(builder: (builderCtx) => MapScreen()));
+
+    if (pickedLocation == null) return;
+
+    String address = 'Selected location';
+
+    // Get address for the picked location
+    if (googleMapsKey.isNotEmpty) {
+      try {
+        final url = Uri.parse(
+          'https://maps.googleapis.com/maps/api/geocode/json?latlng=${pickedLocation.latitude},${pickedLocation.longitude}&result_type=street_address&location_type=ROOFTOP&key=$googleMapsKey',
+        );
+
+        final response = await http.get(url).timeout(
+              const Duration(seconds: 10),
+              onTimeout: () =>
+                  throw TimeoutException('Geocoding request timed out'),
+            );
+
+        final resJsonBody = json.decode(response.body);
+
+        if (resJsonBody['status'] == 'OK' &&
+            resJsonBody['results'] != null &&
+            resJsonBody['results'].isNotEmpty) {
+          address = resJsonBody['results'][0]['formatted_address'];
+        }
+      } catch (_) {
+        address =
+            'Location at ${pickedLocation.latitude}, ${pickedLocation.longitude}';
+      }
+    }
+
+    _savePlace(pickedLocation.latitude, pickedLocation.longitude, address);
   }
 
   @override
@@ -199,7 +192,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
           if (locationImage.isNotEmpty)
             Image.network(
               locationImage,
-              height: 150, // Reduced from 170 to leave space for text
+              height: 150,
               width: double.infinity,
               fit: BoxFit.cover,
             ),
@@ -222,7 +215,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
         Container(
           constraints: const BoxConstraints(
             minHeight: 170,
-            maxHeight: 200, // Allow some flexibility
+            maxHeight: 200,
           ),
           width: double.infinity,
           alignment: Alignment.center,
@@ -248,9 +241,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
               icon: const Icon(Icons.location_on),
             ),
             TextButton.icon(
-              onPressed: () {
-                // TODO: open map screen for manual selection
-              },
+              onPressed: _selectOnMap,
               label: const Text('Select on map'),
               icon: const Icon(Icons.map),
             ),

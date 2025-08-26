@@ -50,13 +50,11 @@ Future<void> main() async {
     await Env.initialize().timeout(
       const Duration(seconds: 5),
       onTimeout: () {
-        debugPrint(
-            '⚠️ Environment initialization timed out, continuing anyway');
         return;
       },
     );
   } catch (e) {
-    debugPrint('⚠️ Error initializing environment: $e');
+    // Environment initialization failed
   }
 
   runApp(

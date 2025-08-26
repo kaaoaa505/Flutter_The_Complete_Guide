@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class Env {
@@ -10,13 +9,9 @@ class Env {
     try {
       // Load .env file using flutter_dotenv
       await dotenv.load(fileName: ".env");
-      debugPrint('✅ Environment variables loaded from .env file');
-      debugPrint('📋 Available variables: ${dotenv.env.keys.join(', ')}');
       _initialized = true;
     } catch (e) {
-      debugPrint('⚠️ Error loading environment variables: $e');
-      debugPrint(
-          '📝 Please create a .env file with GOOGLE_MAPS_API_KEY=your_key');
+      // Error loading environment variables
       _initialized = true;
     }
   }
@@ -24,17 +19,9 @@ class Env {
   static String get googleMapsApiKey {
     if (!_initialized) {
       // Return empty string instead of throwing error to prevent crashes
-      debugPrint('⚠️ Environment not initialized. Returning empty API key.');
       return '';
     }
     final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
-    if (apiKey.isNotEmpty) {
-      debugPrint('✅ Successfully loaded Google Maps API key');
-    } else {
-      debugPrint(
-          '! Warning: GOOGLE_MAPS_API_KEY not found in environment variables');
-      debugPrint('🔍 Available keys: ${dotenv.env.keys.join(', ')}');
-    }
     return apiKey;
   }
 

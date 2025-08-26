@@ -20,34 +20,59 @@ class MapScreen extends StatefulWidget {
 }
 
 class _MapScreenState extends State<MapScreen> {
+  late LatLng target;
+  late LatLng initialTarget;
+  bool hasLocationChanged = false;
+
   @override
-  Widget build(BuildContext context) {
-    final LatLng target = LatLng(
+  void initState() {
+    super.initState();
+    target = LatLng(
       widget.locationModel.latitude,
       widget.locationModel.longitude,
     );
+    initialTarget = target;
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.isSelecting ? 'Pick your location!.' : 'Your Location.'),
+        title: Text(widget.isSelecting
+            ? (hasLocationChanged
+                ? 'Location Selected!'
+                : 'Pick your location!')
+            : 'Your Location.'),
         actions: [
-            if(widget.isSelecting) IconButton(onPressed: (){}, icon: Icon(Icons.save))
+          if (widget.isSelecting)
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).pop(target);
+                },
+                icon: const Icon(Icons.save))
         ],
       ),
       body: GoogleMap(
+        onTap: (position) {
+          setState(() {
+            target = position;
+            hasLocationChanged = true;
+          });
+        },
         initialCameraPosition: CameraPosition(
           target: target,
           zoom: 16,
         ),
         markers: {
-          Marker(
-            markerId: const MarkerId('selected_location_marker_id'),
-            position: target,
-            infoWindow: InfoWindow(
-              title: 'Pinned Location',
-              snippet: widget.locationModel.address,
+          if (widget.isSelecting)
+            Marker(
+              markerId: const MarkerId('selected_location_marker_id'),
+              position: target,
+              infoWindow: const InfoWindow(
+                title: 'Pinned Location',
+                snippet: 'Tap to change location',
+              ),
             ),
-          ),
         },
       ),
     );
