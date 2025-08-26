@@ -40,6 +40,10 @@ class PlacesListUI extends StatelessWidget {
             places[index].title,
             style: Theme.of(context).textTheme.titleMedium,
           ),
+          subtitle: Text(
+            places[index].locationModel.address,
+            style: Theme.of(context).textTheme.bodySmall,
+          ),
           onTap: () {
             Navigator.of(context).push(MaterialPageRoute(
                 builder: (ctx) => PlaceDetailScreen(

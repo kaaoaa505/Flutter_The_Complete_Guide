@@ -26,11 +26,17 @@ final theme = ThemeData(
     titleLarge: GoogleFonts.ubuntuCondensed(
       fontWeight: FontWeight.bold,
     ),
+    bodySmall: GoogleFonts.ubuntuCondensed(
+      color: Colors.white,
+    ),
+    bodyMedium: GoogleFonts.ubuntuCondensed(
+      color: Colors.white,
+    ),
     bodyLarge: GoogleFonts.ubuntuCondensed(
       fontWeight: FontWeight.normal,
       fontSize: 20.0,
       letterSpacing: 2.15,
-      color: Colors.white, // ✅ cleaner than hardcoding ARGB white
+      color: Colors.white,
     ),
   ),
 );

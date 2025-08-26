@@ -8,7 +8,9 @@ import 'package:p11_favorite_places_app/config/env.dart';
 import 'package:p11_favorite_places_app/models/location_model.dart';
 
 class LocationInputUI extends StatefulWidget {
-  const LocationInputUI({super.key});
+  const LocationInputUI({super.key, required this.selectLocation});
+
+  final void Function(LocationModel locationModel) selectLocation;
 
   @override
   State<LocationInputUI> createState() => _LocationInputUIState();
@@ -171,6 +173,8 @@ class _LocationInputUIState extends State<LocationInputUI> {
           );
           isGettingLocation = false;
         });
+
+        widget.selectLocation(_pickedLocation!);
       }
     } catch (e) {
       if (mounted) setState(() => isGettingLocation = false);
