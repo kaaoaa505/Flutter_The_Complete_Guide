@@ -41,35 +41,39 @@ class AddPlaceScreenState extends ConsumerState<AddPlaceScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Form(
           key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(labelText: 'Title'),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter a title';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16.0),
-              ImageInputUI(onImageSelected: (image) {
-                selectedImage = image;
-              }),
-              const SizedBox(height: 16.0),
-              const LocationInputUI(),
-              const SizedBox(height: 16.0),
-              ElevatedButton.icon(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    _addPlace();
-                  }
-                },
-                label: const Text('Add Place'),
-                icon: const Icon(Icons.add),
-              ),
-            ],
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(labelText: 'Title'),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16.0),
+                ImageInputUI(onImageSelected: (image) {
+                  selectedImage = image;
+                }),
+                const SizedBox(height: 16.0),
+                const LocationInputUI(),
+                const SizedBox(height: 16.0),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      _addPlace();
+                    }
+                  },
+                  label: const Text('Add Place'),
+                  icon: const Icon(Icons.add),
+                ),
+                const SizedBox(
+                    height: 16.0), // Extra space at bottom for scrolling
+              ],
+            ),
           ),
         ),
       ),

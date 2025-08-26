@@ -23,8 +23,9 @@ class Env {
 
   static String get googleMapsApiKey {
     if (!_initialized) {
-      throw StateError(
-          'Environment not initialized. Call Env.initialize() first.');
+      // Return empty string instead of throwing error to prevent crashes
+      debugPrint('⚠️ Environment not initialized. Returning empty API key.');
+      return '';
     }
     final apiKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
     if (apiKey.isNotEmpty) {

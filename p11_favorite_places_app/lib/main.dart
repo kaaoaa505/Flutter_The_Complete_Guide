@@ -39,8 +39,19 @@ Future<void> main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // ✅ ensure bindings before async work
 
-  // Initialize environment variables
-  await Env.initialize();
+  // Initialize environment variables with timeout
+  try {
+    await Env.initialize().timeout(
+      const Duration(seconds: 5),
+      onTimeout: () {
+        debugPrint(
+            '⚠️ Environment initialization timed out, continuing anyway');
+        return;
+      },
+    );
+  } catch (e) {
+    debugPrint('⚠️ Error initializing environment: $e');
+  }
 
   runApp(
     const ProviderScope(
