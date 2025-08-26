@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:location/location.dart';
+import 'package:p11_favorite_places_app/config/env.dart';
 import 'package:p11_favorite_places_app/models/location_model.dart';
 
 class LocationInputUI extends StatefulWidget {
@@ -22,16 +22,24 @@ class _LocationInputUIState extends State<LocationInputUI> {
     super.initState();
     // ✅ Get API key from environment variables
     try {
-      googleMapsKey = dotenv.env['GOOGLE_MAPS_API_KEY'] ?? '';
+      googleMapsKey = Env.googleMapsApiKey;
+      debugPrint('✅ Successfully loaded Google Maps API key');
+      if (googleMapsKey.isNotEmpty) {
+        debugPrint('🔑 API Key loaded: ${googleMapsKey.substring(0, 10)}...');
+      }
     } catch (e) {
-      debugPrint('Error accessing dotenv: $e');
+      debugPrint('❌ Error accessing environment variables: $e');
       googleMapsKey = '';
     }
 
     // Check if API key is available
     if (googleMapsKey.isEmpty) {
       debugPrint(
-          'Warning: GOOGLE_MAPS_API_KEY not found in environment variables');
+          '⚠️ Warning: GOOGLE_MAPS_API_KEY not found in environment variables');
+      debugPrint(
+          '📝 Please create a .env file with GOOGLE_MAPS_API_KEY=your_key');
+    } else {
+      debugPrint('✅ Google Maps API key is available and ready to use');
     }
   }
 
@@ -40,7 +48,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
     final lat = _pickedLocation!.latitude;
     final lng = _pickedLocation!.longitude;
 
-    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&markers=color:blue%7Clabel:A%7C$lat,$lng&key=$googleMapsKey';
+    return 'https://maps.googleapis.com/maps/api/staticmap?center=$lat,$lng&zoom=16&size=600x300&markers=color:blue|label:A|$lat,$lng&key=$googleMapsKey';
   }
 
   Future<void> _getCurrentLocation() async {
@@ -87,7 +95,7 @@ class _LocationInputUIState extends State<LocationInputUI> {
       if (googleMapsKey.isNotEmpty) {
         try {
           final url = Uri.parse(
-            'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&location_type=ROOFTOP&result_type=street_address&key=$googleMapsKey',
+            'https://maps.googleapis.com/maps/api/geocode/json?latlng=$lat,$lng&result_type=street_address&location_type=ROOFTOP&key=$googleMapsKey',
           );
 
           final response = await http.get(url);
