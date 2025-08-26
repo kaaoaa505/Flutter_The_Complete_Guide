@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -21,7 +23,7 @@ android {
 
     // Read values from local.properties (safe, ignored by Git)
     val localProps = gradle.rootProject.file("local.properties")
-    val props = java.util.Properties()
+    val props = Properties()
     if (localProps.exists()) {
         props.load(localProps.inputStream())
     }
