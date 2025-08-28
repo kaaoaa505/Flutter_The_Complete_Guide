@@ -28,11 +28,11 @@ class ChatProvider with ChangeNotifier {
   }
 
   // Send a new message
-  Future<void> sendMessage(String sender, String content) async {
+  Future<void> sendMessage(String content) async {
     if (content.trim().isEmpty) return;
 
     try {
-      final newMessage = await ApiService.sendMessage(sender, content);
+      final newMessage = await ApiService.sendMessage(content);
       _messages.add(newMessage);
       notifyListeners();
     } catch (e) {
@@ -42,13 +42,9 @@ class ChatProvider with ChangeNotifier {
   }
 
   // Update a message
-  Future<void> updateMessage(int id, String sender, String content) async {
+  Future<void> updateMessage(int id, String content) async {
     try {
-      final updatedMessage = await ApiService.updateMessage(
-        id,
-        sender,
-        content,
-      );
+      final updatedMessage = await ApiService.updateMessage(id, content);
       final index = _messages.indexWhere((message) => message.id == id);
       if (index != -1) {
         _messages[index] = updatedMessage;

@@ -102,6 +102,15 @@ flutter run
 
 The Laravel backend provides the following REST API endpoints:
 
+### Authentication Endpoints
+
+- `POST /api/register` - Register a new user
+- `POST /api/login` - Login user
+- `POST /api/logout` - Logout user (requires authentication)
+- `GET /api/user` - Get current user (requires authentication)
+
+### Chat Endpoints (requires authentication)
+
 - `GET /api/messages` - Get all messages
 - `POST /api/messages` - Send a new message
 - `GET /api/messages/{id}` - Get a specific message
@@ -110,23 +119,64 @@ The Laravel backend provides the following REST API endpoints:
 
 ### Request/Response Format
 
+**Register User (POST /api/register)**
+
+```json
+{
+  "name": "John Doe",
+  "email": "john@example.com",
+  "password": "password123",
+  "password_confirmation": "password123"
+}
+```
+
+**Login User (POST /api/login)**
+
+```json
+{
+  "email": "john@example.com",
+  "password": "password123"
+}
+```
+
 **Send Message (POST /api/messages)**
 
 ```json
 {
-  "sender": "John Doe",
   "content": "Hello, world!"
 }
 ```
 
-**Response**
+**Response (Authentication)**
+
+```json
+{
+  "success": true,
+  "data": {
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
+    "token": "1|abc123...",
+    "token_type": "Bearer"
+  },
+  "message": "User registered successfully"
+}
+```
+
+**Response (Message)**
 
 ```json
 {
   "success": true,
   "data": {
     "id": 1,
-    "sender": "John Doe",
+    "user": {
+      "id": 1,
+      "name": "John Doe",
+      "email": "john@example.com"
+    },
     "content": "Hello, world!",
     "created_at": "2024-01-01T12:00:00.000000Z",
     "updated_at": "2024-01-01T12:00:00.000000Z"
@@ -139,28 +189,35 @@ The Laravel backend provides the following REST API endpoints:
 
 ### Flutter Frontend
 
+- User authentication (register/login/logout)
+- Secure token-based authentication
 - Real-time chat interface
-- Message bubbles with sender avatars
+- Message bubbles with user avatars
 - Timestamp display
 - Error handling and retry functionality
 - Responsive design
 - Auto-scroll to latest messages
+- User profile management
 
 ### Laravel Backend
 
+- User authentication with Laravel Sanctum
+- Secure token-based API authentication
 - RESTful API endpoints
 - Database integration with MySQL
 - CORS configuration for cross-origin requests
-- Input validation
+- Input validation and error handling
 - JSON response formatting
+- User authorization for message operations
 
 ## Usage
 
 1. Start the Laravel backend server
 2. Start the Flutter application
-3. Enter your name in the "Your name" field
+3. **Register a new account** or **login** with existing credentials
 4. Type messages and send them
-5. Messages will appear in real-time chat bubbles
+5. Messages will appear in real-time chat bubbles with user information
+6. Use the logout button in the app bar to sign out
 
 ## Troubleshooting
 

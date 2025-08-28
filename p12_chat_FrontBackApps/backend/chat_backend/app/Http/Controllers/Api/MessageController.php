@@ -14,7 +14,7 @@ class MessageController extends Controller
      */
     public function index(): JsonResponse
     {
-        $messages = Message::orderBy('created_at', 'asc')->get();
+        $messages = Message::with('user')->orderBy('created_at', 'asc')->get();
         return response()->json([
             'success' => true,
             'data' => $messages
@@ -27,14 +27,16 @@ class MessageController extends Controller
     public function store(Request $request): JsonResponse
     {
         $request->validate([
-            'sender' => 'required|string|max:255',
             'content' => 'required|string',
         ]);
 
         $message = Message::create([
-            'sender' => $request->sender,
+            'user_id' => $request->user()->id,
             'content' => $request->content,
         ]);
+
+        // Load the user relationship
+        $message->load('user');
 
         return response()->json([
             'success' => true,
@@ -48,6 +50,7 @@ class MessageController extends Controller
      */
     public function show(Message $message): JsonResponse
     {
+        $message->load('user');
         return response()->json([
             'success' => true,
             'data' => $message
@@ -59,12 +62,23 @@ class MessageController extends Controller
      */
     public function update(Request $request, Message $message): JsonResponse
     {
+        // Check if user owns the message
+        if ($message->user_id !== $request->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized to update this message'
+            ], 403);
+        }
+
         $request->validate([
-            'sender' => 'sometimes|required|string|max:255',
-            'content' => 'sometimes|required|string',
+            'content' => 'required|string',
         ]);
 
-        $message->update($request->only(['sender', 'content']));
+        $message->update([
+            'content' => $request->content,
+        ]);
+
+        $message->load('user');
 
         return response()->json([
             'success' => true,
@@ -76,8 +90,16 @@ class MessageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Message $message): JsonResponse
+    public function destroy(Request $request, Message $message): JsonResponse
     {
+        // Check if user owns the message
+        if ($message->user_id !== $request->user()->id) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized to delete this message'
+            ], 403);
+        }
+
         $message->delete();
 
         return response()->json([

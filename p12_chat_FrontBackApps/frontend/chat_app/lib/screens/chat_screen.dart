@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../providers/chat_provider.dart';
+import '../providers/auth_provider.dart';
 import '../models/message.dart';
+import 'login_screen.dart';
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({super.key});
@@ -13,7 +15,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
-  final TextEditingController _senderController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
   @override
@@ -27,7 +28,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void dispose() {
     _messageController.dispose();
-    _senderController.dispose();
     _scrollController.dispose();
     super.dispose();
   }
@@ -42,6 +42,17 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  Future<void> _logout() async {
+    final authProvider = context.read<AuthProvider>();
+    await authProvider.logout();
+
+    if (mounted) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(builder: (context) => const LoginScreen()),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,36 +61,35 @@ class _ChatScreenState extends State<ChatScreen> {
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
         elevation: 2,
+        actions: [
+          Consumer<AuthProvider>(
+            builder: (context, authProvider, child) {
+              return PopupMenuButton<String>(
+                icon: const Icon(Icons.more_vert),
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    _logout();
+                  }
+                },
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: 'logout',
+                    child: Row(
+                      children: [
+                        const Icon(Icons.logout, color: Colors.red),
+                        const SizedBox(width: 8),
+                        Text('Logout (${authProvider.user?.name ?? 'User'})'),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
-          // Sender name input
-          Container(
-            padding: const EdgeInsets.all(16),
-            color: Colors.grey[100],
-            child: Row(
-              children: [
-                const Text(
-                  'Your name: ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                Expanded(
-                  child: TextField(
-                    controller: _senderController,
-                    decoration: const InputDecoration(
-                      hintText: 'Enter your name',
-                      border: OutlineInputBorder(),
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 12,
-                        vertical: 8,
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-
           // Messages list
           Expanded(
             child: Consumer<ChatProvider>(
@@ -180,20 +190,9 @@ class _ChatScreenState extends State<ChatScreen> {
 
   void _sendMessage() {
     final content = _messageController.text.trim();
-    final sender = _senderController.text.trim();
-
     if (content.isEmpty) return;
-    if (sender.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please enter your name first'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return;
-    }
 
-    context.read<ChatProvider>().sendMessage(sender, content);
+    context.read<ChatProvider>().sendMessage(content);
     _messageController.clear();
   }
 }
@@ -205,8 +204,8 @@ class _MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isCurrentUser =
-        message.sender == context.read<ChatProvider>().messages.last.sender;
+    final currentUser = context.read<AuthProvider>().user;
+    final isCurrentUser = message.user?.id == currentUser?.id;
 
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -220,8 +219,8 @@ class _MessageBubble extends StatelessWidget {
             CircleAvatar(
               backgroundColor: Colors.blue,
               child: Text(
-                message.sender.isNotEmpty
-                    ? message.sender[0].toUpperCase()
+                message.user?.name.isNotEmpty == true
+                    ? message.user!.name[0].toUpperCase()
                     : '?',
                 style: const TextStyle(
                   color: Colors.white,
@@ -241,9 +240,9 @@ class _MessageBubble extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  if (!isCurrentUser)
+                  if (!isCurrentUser && message.user != null)
                     Text(
-                      message.sender,
+                      message.user!.name,
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 12,
@@ -274,8 +273,8 @@ class _MessageBubble extends StatelessWidget {
             CircleAvatar(
               backgroundColor: Colors.blue,
               child: Text(
-                message.sender.isNotEmpty
-                    ? message.sender[0].toUpperCase()
+                message.user?.name.isNotEmpty == true
+                    ? message.user!.name[0].toUpperCase()
                     : '?',
                 style: const TextStyle(
                   color: Colors.white,
